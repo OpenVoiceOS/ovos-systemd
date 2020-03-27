@@ -22,17 +22,17 @@ Unit files for user services can be installed in a couple of [different places](
 So for now, to manually install these unit files for testing, copy them to that place;
 `cp user/* ~/.config/systemd/user/`
 
-We can then enable them to be auto started when the user logs in;
+We can then enable them to be auto started when the user logs in;<br>
 `systemctl --user enable mycroft.service mycroft-messagebus.service mycroft-audio.service mycroft-voice.service mycroft-skills.service mycroft-enclosure.service`
 
-To start them manually now without a reboot, just run;
+To start them manually now without a reboot, just run;<br>
 `systemctl --user start mycroft.service`
-All different sub unit files will automatically be started as well. If for whatever reason one of the sub units need to be sarted/stopped/restarted that can be done with similar command (example);
+All different sub unit files will automatically be started as well. If for whatever reason one of the sub units need to be sarted/stopped/restarted that can be done with similar command (example);<br>
 `systemctl --user restart mycroft-voice.service`
 
 If you restart your system now then Mycroft will be started automatically once you log in (the default for Picroft). After your last session is closed, your user's systemd instances (and with it, our Mycroft services) will shutdown. 
 
-You can make your user's systemd instances independent from your user's sessions (so that our Mycroft services starts at boot time even if you don't log in and also keeps running until a shutdown/reboot) with the following command;
+You can make your user's systemd instances independent from your user's sessions (so that our Mycroft services starts at boot time even if you don't log in and also keeps running until a shutdown/reboot) with the following command;<br>
 `sudo loginctl enable-linger $USER`
 
 ## Mycroft as system service
@@ -55,7 +55,7 @@ Our mycroft.service dummy unit is used to start mycroft-messagebus.service. All 
 
 You can notify systemd once it has completed its initialization of a program. This allows systemd to delay starting these sub units until mycroft-messagebus service is really ready.
 
-These notification is done using so called "[sd_notify](https://www.freedesktop.org/software/systemd/man/sd_notify.html)" system calls. We can use that with a simple additional requirements from "python-systemd". When mycroft-messagebus is fully started and ready we can let systemd know by;
+These notification is done using so called "[sd_notify](https://www.freedesktop.org/software/systemd/man/sd_notify.html)" system calls. We can use that with a simple additional requirements from "python-systemd". When mycroft-messagebus is fully started and ready we can let systemd know by;<br>
 `import systemd.daemon
 systemd.daemon.notify('READY=1')`
 
@@ -70,5 +70,3 @@ I have linked to watchdog info before, so if there is interest for it we can sta
 
 
 Open for feedback. I am no expert to it also, so just want to open the disccusion about what path should be the best.
-
-
