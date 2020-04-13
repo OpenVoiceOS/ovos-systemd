@@ -5,9 +5,11 @@ After=mycroft.service
 After=mycroft-messagebus.service
 
 [Service]
+Type=notify
 WorkingDirectory=%h/mycroft-core
 Environment=PYTHONPATH=%h/mycroft-core/.venv/bin
-ExecStart=%h/mycroft-core/.venv/bin/python -m mycroft.skills
+Environment=PYTHONUNBUFFERED=1
+ExecStart=%h/mycroft-core/.venv/bin/python systemd_mycroft_skills.py
 StandardOutput=file:/var/log/mycroft/skills.log
 StandardError=file:/var/log/mycroft/skills.error.log
 Restart=on-failure
