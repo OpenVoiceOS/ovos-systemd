@@ -23,7 +23,11 @@ def notify_ready():
     n.notify('READY=1')
     print('Startup of Mycroft Skills complete')
 
-def pet_watchdog():
-    print('Petting the watchdog')
+def notify_stopping():
+    n.notify('STOPPING=1')
+    print('Startup of Mycroft Skills complete')
 
-main(ready_hook=notify_ready, watchdog=pet_watchdog)
+def pet_watchdog():
+    n.notify('WATCHDOG=1')
+
+main(ready_hook=notify_ready, stopping_hook=notify_stopping, watchdog=pet_watchdog)
