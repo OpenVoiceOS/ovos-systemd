@@ -25,7 +25,7 @@ def notify_ready():
 
 def notify_stopping():
     n.notify('STOPPING=1')
-    print('Startup of Mycroft Skills complete')
+    print('Stopping of Mycroft Skills complete')
 
 def pet_watchdog():
     n.notify('WATCHDOG=1')
