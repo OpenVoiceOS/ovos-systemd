@@ -21,11 +21,11 @@ n = sdnotify.SystemdNotifier()
 
 def notify_ready():
     n.notify('READY=1')
-    print('Startup of Mycroft Skills complete')
+    print('Startup of Mycroft Skills service complete')
 
 def notify_stopping():
     n.notify('STOPPING=1')
-    print('Stopping of Mycroft Skills complete')
+    print('Stopping the Mycroft Skills service')
 
 def pet_watchdog():
     n.notify('WATCHDOG=1')
