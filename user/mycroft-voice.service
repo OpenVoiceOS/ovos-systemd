@@ -5,12 +5,20 @@ After=mycroft.service
 After=mycroft-messagebus.service
 
 [Service]
+Type=notify
 WorkingDirectory=%h/mycroft-core
 Environment=PYTHONPATH=%h/mycroft-core/.venv/bin
-ExecStart=%h/mycroft-core/.venv/bin/python -m mycroft.client.speech
+Environment=PYTHONUNBUFFERED=1
+ExecStart=%h/mycroft-core/.venv/bin/python %h/mycroft-core/mycroft-systemd/scripts/systemd_voice.py
 StandardOutput=file:/var/log/mycroft/voice.log
 StandardError=file:/var/log/mycroft/voice.error.log
+TimeoutStartSec=1m
+TimeoutStopSec=1m
 Restart=on-failure
+StartLimitInterval=5min
+StartLimitBurst=4
+#StartLimitAction=reboot-force
+WatchdogSec=30s
 
 [Install]
 WantedBy=mycroft.service
