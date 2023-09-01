@@ -15,17 +15,17 @@
 # limitations under the License.
 ##########################################################################
 import sdnotify
-from mycroft.audio.__main__ import main
+from ovos_audio.__main__ import main
 
 n = sdnotify.SystemdNotifier()
 
 def notify_ready():
     n.notify('READY=1')
-    print('Startup of Mycroft Audio service complete')
+    print('Startup of OVOS Audio service complete')
 
 def notify_stopping():
     n.notify('STOPPING=1')
-    print('Stopping the Mycroft Audio service')
+    print('Stopping the OVOS Audio service')
 
 def pet_watchdog():
     n.notify('WATCHDOG=1')

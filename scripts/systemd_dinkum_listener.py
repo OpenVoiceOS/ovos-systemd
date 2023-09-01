@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ##########################################################################
-# systemd_voice.py
+# systemd_dinkum_listener.py
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
 # limitations under the License.
 ##########################################################################
 import sdnotify
-from mycroft.client.speech.__main__ import main
+from ovos_dinkum_listener.__main__ import main
 
 n = sdnotify.SystemdNotifier()
 
 def notify_ready():
     n.notify('READY=1')
-    print('Startup of Mycroft Voice service complete')
+    print('Startup of OVOS Voice service complete')
 
 def notify_stopping():
     n.notify('STOPPING=1')
-    print('Stopping the Mycroft Voice service')
+    print('Stopping the OVOS Voice service')
 
 def pet_watchdog():
     n.notify('WATCHDOG=1')

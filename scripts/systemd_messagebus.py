@@ -15,17 +15,17 @@
 # limitations under the License.
 ##########################################################################
 import sdnotify
-from mycroft.messagebus.service.__main__ import main
+from ovos_messagebus.__main__ import main
 
 n = sdnotify.SystemdNotifier()
 
 def notify_ready():
     n.notify('READY=1')
-    print('Startup of Mycroft Messagebus service complete')
+    print('Startup of OVOS Messagebus service complete')
 
 def notify_stopping():
     n.notify('STOPPING=1')
-    print('Stopping the Mycroft Messagebus service')
+    print('Stopping the OVOS Messagebus service')
 
 def pet_watchdog():
     n.notify('WATCHDOG=1')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ##########################################################################
-# systemd_enclosure.py
+# systemd_admin_phal.py
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
 # limitations under the License.
 ##########################################################################
 import sdnotify
-from mycroft.client.enclosure.__main__ import main
+from ovos_PHAL.admin import main
 
 n = sdnotify.SystemdNotifier()
 
 def notify_ready():
     n.notify('READY=1')
-    print('Startup of Mycroft Enclosure service complete')
+    print('Startup of OVOS admin Phal service complete')
 
 def notify_stopping():
     n.notify('STOPPING=1')
-    print('Stopping the Mycroft Enclosure service')
+    print('Stopping the OVOS admin Phal service')
 
 def pet_watchdog():
     n.notify('WATCHDOG=1')

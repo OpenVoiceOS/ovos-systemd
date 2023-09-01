@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ##########################################################################
-# systemd_skills.py
+# systemd_phal.py
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
 # limitations under the License.
 ##########################################################################
 import sdnotify
-from ovos_core.__main__ import main
+from ovos_PHAL.__main__ import main
 
 n = sdnotify.SystemdNotifier()
 
 def notify_ready():
     n.notify('READY=1')
-    print('Startup of OVOS Skills service complete')
+    print('Startup of OVOS Phal service complete')
 
 def notify_stopping():
     n.notify('STOPPING=1')
-    print('Stopping the OVOS Skills service')
+    print('Stopping the OVOS Phal service')
 
 def pet_watchdog():
     n.notify('WATCHDOG=1')

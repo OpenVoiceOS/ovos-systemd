@@ -1,4 +1,7 @@
 ## WARNING: Work in progress
+
+**This repository is in progress of being changed to the OVOS format.  README will be updated soon.**
+
 This repository is a work in progress. For these to run properly, you need to run the following mycroft-core version till this get PR-ed and merged into the main repository;
 https://github.com/forslund/mycroft-core/tree/service-hooks
 
@@ -42,9 +45,9 @@ To start them manually now without a reboot, just run;
 All different sub unit files will automatically be started as well. If for whatever reason one of the sub units need to be started, stopped or restarted that can be done with similar command (example);
 `systemctl --user restart mycroft-voice.service`
 
-If you restart your system now then Mycroft will be started automatically once you log in. After your last session is closed, your user's systemd instances (and with it, our Mycroft services) will shutdown. 
+If you restart your system now then Mycroft will be started automatically once you log in. After your last session is closed, your user's systemd instances (and with it, our Mycroft services) will shutdown.
 
-This way Mycroft is ONLY started and therefor listening when you are logged in. For most desktops that is what you would want. If however you want to start Mycroft automatically regardless of being logged in, you can do that by; 
+This way Mycroft is ONLY started and therefor listening when you are logged in. For most desktops that is what you would want. If however you want to start Mycroft automatically regardless of being logged in, you can do that by;
 
 `sudo loginctl enable-linger <USER>`
 
@@ -63,7 +66,7 @@ To start them manually now without a reboot, just run;
 `sudo systemctl start mycroft.service`
 
 ## Notifying systemd when the Service is Ready.
-Our mycroft.service dummy unit is used to start mycroft-messagebus.service. All other units are only being started if the messagebus is started. The python startup wrappers are used to report back to systemd when the service is READY. 
+Our mycroft.service dummy unit is used to start mycroft-messagebus.service. All other units are only being started if the messagebus is started. The python startup wrappers are used to report back to systemd when the service is READY.
 This allows systemd to ONLY start the other service until mycroft-messagebus service is fully up on running.
 
 These notifications is done using so called "[sd_notify](https://www.freedesktop.org/software/systemd/man/sd_notify.html)" system calls.
