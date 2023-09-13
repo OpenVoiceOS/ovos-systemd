@@ -27,7 +27,4 @@ def notify_stopping():
     n.notify('STOPPING=1')
     print('Stopping the OVOS Messagebus service')
 
-def pet_watchdog():
-    n.notify('WATCHDOG=1')
-
-main(ready_hook=notify_ready, stopping_hook=notify_stopping, watchdog=pet_watchdog)
+main(ready_hook=notify_ready, stopping_hook=notify_stopping)

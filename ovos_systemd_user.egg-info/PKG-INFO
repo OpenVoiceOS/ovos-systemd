@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: ovos-systemd-user
+Version: 0.0.0
+Summary: systemd service and OVOS hook files
+Home-page: https://github.com/OpenVoiceOS/ovos-systemd-user
+License: Apache-2.0
+License-File: LICENSE

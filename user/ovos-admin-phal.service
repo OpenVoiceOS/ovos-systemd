@@ -5,17 +5,16 @@ After=ovos.service
 After=ovos-messagebus.service
 
 [Service]
+User=%u
 Type=notify
 Environment=PYTHONPATH=%/.venv/bin
 Environment=PYTHONUNBUFFERED=1
-ExecStart=%h.venv/bin/python %h/.local/bin/systemd/systemd_admin_phal.py
+ExecStart=%h/.venv/bin/python %h/.local/bin/systemd/systemd_admin_phal.py
 TimeoutStartSec=1m
 TimeoutStopSec=1m
 Restart=on-failure
 StartLimitInterval=5min
 StartLimitBurst=4
-#StartLimitAction=reboot-force
-WatchdogSec=30s
 
 [Install]
 WantedBy=default.target

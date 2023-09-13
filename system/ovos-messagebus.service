@@ -4,7 +4,7 @@ PartOf=ovos.service
 After=ovos.service
 
 [Service]
-User=ovos #Change this to the user that runs OVOS
+User=%u
 Type=notify
 Environment=PYTHONPATH=%h/.venv/bin
 Environment=PYTHONUNBUFFERED=1
@@ -14,8 +14,6 @@ TimeoutStopSec=1m
 Restart=on-failure
 StartLimitInterval=5min
 StartLimitBurst=4
-#StartLimitAction=reboot-force
-WatchdogSec=30s
 
 [Install]
 WantedBy=ovos.service

@@ -14,7 +14,6 @@ TimeoutStopSec=1m
 Restart=on-failure
 StartLimitInterval=5min
 StartLimitBurst=4
-WatchdogSec=30s
 
 [Install]
 WantedBy=ovos.service

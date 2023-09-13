@@ -1,0 +1,15 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+ovos_systemd_user.egg-info/PKG-INFO
+ovos_systemd_user.egg-info/SOURCES.txt
+ovos_systemd_user.egg-info/dependency_links.txt
+ovos_systemd_user.egg-info/requires.txt
+ovos_systemd_user.egg-info/top_level.txt
+scripts/systemd_admin_phal.py
+scripts/systemd_audio.py
+scripts/systemd_dinkum_listener.py
+scripts/systemd_messagebus.py
+scripts/systemd_phal.py
+scripts/systemd_skills.py
