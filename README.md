@@ -1,85 +1,116 @@
-## WARNING: Work in progress
-This repository is a work in progress. For these to run properly, you need to run the following mycroft-core version till this get PR-ed and merged into the main repository;
-https://github.com/forslund/mycroft-core/tree/service-hooks
-
 # mycroft-systemd
-Many Linux distributions use systemd to manage the system's services (or *daemons*), for example to automatically start certain services in the correct order when the system boots.
 
-Systemd supports both system and user services. System services run in the system's own systemd instance and provide functionalities for the whole system and all users. User services, on the other hand, run in a separate systemd instance tied to a specific user.
+**Work in progress.** These unit files need the [`service-hooks`](https://github.com/forslund/mycroft-core/tree/service-hooks) branch of mycroft-core until that branch merges into the main repository.
 
-There is one main (dummy) mycroft.service unit that handles the different sub unit files for;
+This repository holds systemd unit files and Python startup wrappers for the Mycroft voice assistant stack. The units let systemd manage the assistant's services (message bus, audio, voice, skills, and enclosure) as a group.
+
+Systemd supports both system services and user services. A system service runs in the system's own systemd instance and serves the whole machine. A user service runs in a separate systemd instance tied to one user account.
+
+A main `mycroft.service` unit starts the sub-units:
+
 - message-bus
 - audio
 - voice
 - skills
 - enclosure
 
-![image](https://www.j1nx.nl/wp-content/uploads/2020/02/systemd-flow.png)
+![Diagram of the systemd unit flow for the Mycroft services](https://www.j1nx.nl/wp-content/uploads/2020/02/systemd-flow.png)
 
-Starting the mycroft.service unit will start all different sub units. All sub units can be restarted without interfering with the others. This system could replace the "./start-mycroft.sh all" script.
+Starting `mycroft.service` starts all the sub-units. Each sub-unit can restart on its own, without stopping the others. This setup replaces the `./start-mycroft.sh all` script.
 
 ## Getting the sources
-This repository is setup to be pulled into the "mycroft-core" directory. It is assumed that mycroft-core is installed within the users home directory ( /home/<USER>/mycroft-core ) according their documentation. If you have it installed somewhere else, you will need to adjust the paths within the different files for this to work.
 
-So to install:
-`cd ~/mycroft-core`
-`git clone https://github.com/j1nx/mycroft-systemd.git`
+This repository is meant to sit inside the `mycroft-core` directory. It assumes `mycroft-core` is installed at `~/mycroft-core`. If your installation lives elsewhere, adjust the paths in the unit files to match.
 
-## Running Mycroft as user systemd service (Recommended for Desktop installations)
+To install:
 
-### Unit Files
-Unit files for user services can be installed in a couple of [different places](https://www.freedesktop.org/software/systemd/man/systemd.unit.html#User%20Unit%20Search%20Path). I believe there is no right or wrong here, but going to pick one; ~/.config/systemd/user/
+```sh
+cd ~/mycroft-core
+git clone https://github.com/j1nx/mycroft-systemd.git
+```
 
-So to install these unit files, copy them to that place;
-`cp mycroft-systemd/user/* ~/.config/systemd/user/`
+## Running Mycroft as a user systemd service
 
-We can then enable them to be auto started when the user logs in;
-`systemctl --user enable mycroft.service`
+Use this method for desktop installations.
 
-To start them manually now without a reboot, just run;
-`systemctl --user start mycroft.service`
+### Unit files
 
-All different sub unit files will automatically be started as well. If for whatever reason one of the sub units need to be started, stopped or restarted that can be done with similar command (example);
-`systemctl --user restart mycroft-voice.service`
+User unit files can go in any of the [locations systemd searches](https://www.freedesktop.org/software/systemd/man/systemd.unit.html#User%20Unit%20Search%20Path). This repository uses `~/.config/systemd/user/`.
 
-If you restart your system now then Mycroft will be started automatically once you log in. After your last session is closed, your user's systemd instances (and with it, our Mycroft services) will shutdown. 
+Copy the unit files there:
 
-This way Mycroft is ONLY started and therefor listening when you are logged in. For most desktops that is what you would want. If however you want to start Mycroft automatically regardless of being logged in, you can do that by; 
+```sh
+cp mycroft-systemd/user/* ~/.config/systemd/user/
+```
 
-`sudo loginctl enable-linger <USER>`
+Enable them to start automatically at login:
 
-Change the <USER> in above command to the username of the user running mycroft. Now Mycroft will be started regardless of the user being logged in or not. This is basically the same as installing the system service files described in the next section.
+```sh
+systemctl --user enable mycroft.service
+```
 
-## Running Mycroft as system systemd service (Recommended for Headless installations)
+Start them now, without a reboot:
 
-### Unit Files
-System service files are installed within the /etc/systemd/system/ directory and therefor require root access to be installed.
-`sudo cp mycroft-systemd/system/* /etc/systemd/system`
+```sh
+systemctl --user start mycroft.service
+```
 
-We can then enable them to be started at boot by;
-`sudo systemctl enable mycroft.service`
+All the sub-units start automatically with `mycroft.service`. To start, stop, or restart one sub-unit on its own, run a command like:
 
-To start them manually now without a reboot, just run;
-`sudo systemctl start mycroft.service`
+```sh
+systemctl --user restart mycroft-voice.service
+```
 
-## Notifying systemd when the Service is Ready.
-Our mycroft.service dummy unit is used to start mycroft-messagebus.service. All other units are only being started if the messagebus is started. The python startup wrappers are used to report back to systemd when the service is READY. 
-This allows systemd to ONLY start the other service until mycroft-messagebus service is fully up on running.
+After a reboot, Mycroft starts automatically once you log in. When your last session closes, the user systemd instance (and the Mycroft services with it) shuts down. This way, Mycroft only runs while you are logged in, which fits most desktop setups.
 
-These notifications is done using so called "[sd_notify](https://www.freedesktop.org/software/systemd/man/sd_notify.html)" system calls.
+To start Mycroft regardless of login state, enable lingering for the user:
 
-The same goes for stopping.
+```sh
+sudo loginctl enable-linger <USER>
+```
 
-## Automatically restarting of services
-The systemd service files automatically restarting the service by the following conditions;
-- On failure. (service failed/quited/errored out/etc)
-- If it haven't received the READY notify within at least one minute.
-- If while running doesn't receive a petting the watchdog message within 30 seconds (service hangs)
-And gives up after it has restarted itself at least 4 times within the last 5 minnutes.
+Replace `<USER>` with the account that runs Mycroft. This has the same effect as installing the system service files described in the next section.
+
+## Running Mycroft as a system systemd service
+
+Use this method for headless installations.
+
+### Unit files
+
+System service files live in `/etc/systemd/system/` and need root access to install:
+
+```sh
+sudo cp mycroft-systemd/system/* /etc/systemd/system
+```
+
+Enable them to start at boot:
+
+```sh
+sudo systemctl enable mycroft.service
+```
+
+Start them now, without a reboot:
+
+```sh
+sudo systemctl start mycroft.service
+```
+
+## Notifying systemd when a service is ready
+
+The `mycroft.service` unit starts `mycroft-messagebus.service` first. Every other unit waits for the message bus to report ready before it starts. The Python startup wrappers send this ready signal to systemd using [`sd_notify`](https://www.freedesktop.org/software/systemd/man/sd_notify.html) calls. The same mechanism reports when a service stops.
+
+## Automatic restarts
+
+A unit restarts itself when:
+
+- the service fails, quits, or errors out
+- the service does not send its ready notification within one minute
+- the service does not send a watchdog message within 30 seconds (the service hangs)
+
+A unit stops trying to restart after 4 attempts within 5 minutes.
 
 ## Watchdog
-The included service files make use of a software based Watchdog. If the service wrapper is not letting systemd now in time that it is still a happy bunny (or dog) which basically means it "hangs", systemd will restart the service. Again if this happes more than 4 times within 5 minutes, something more is going on and it will give up in the end. Most of the times a reboot of the device will fix things. This can be automated by commenting out the "StartLimitAction=reboot-force" line within the systemd service files.
 
-You can compliment the software Watchdog with a hardware based Watchdog. This will force reboot your device if the whole system hangs. MOre information on that in the following blog post;
-http://0pointer.de/blog/projects/watchdog.html
+Each unit uses a software watchdog. If the service wrapper does not tell systemd in time that the service is still running, systemd treats the service as hung and restarts it. After 4 restarts within 5 minutes, systemd gives up, and the device usually needs a reboot to recover. To automate this recovery, comment out the `StartLimitAction=reboot-force` line in the unit files.
 
+You can pair the software watchdog with a hardware watchdog, which forces a reboot if the whole system hangs. Read more in this [blog post on watchdogs](http://0pointer.de/blog/projects/watchdog.html).
